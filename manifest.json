@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "ChatGPT Search Query Revealer",
+  "name": "Sandbox AI SEO Extension",
   "version": "1.0",
   "description": "Reveals the exact search queries ChatGPT sends",
   "permissions": ["storage"],
