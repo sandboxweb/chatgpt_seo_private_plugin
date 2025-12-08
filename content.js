@@ -30,7 +30,7 @@ function createPanel() {
   panel.id = 'sqr-panel';
   panel.innerHTML = `
     <div class="sqr-header">
-      <span>🔍 Search Queries</span>
+      <span>🏖️ Sandbox AI SEO Extension</span>
       <div>
         <button class="sqr-min">−</button>
         <button class="sqr-close">×</button>
