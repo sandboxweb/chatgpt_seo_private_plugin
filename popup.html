@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      width: 350px;
+      max-height: 500px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-size: 13px;
+      background: #1a1a1a;
+      color: #e0e0e0;
+    }
+    .header {
+      padding: 16px;
+      background: #2a2a2a;
+      border-bottom: 1px solid #444;
+    }
+    .header h1 { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+    .header p { font-size: 11px; color: #888; }
+    .content { padding: 12px; max-height: 400px; overflow-y: auto; }
+    .empty { text-align: center; padding: 30px 20px; color: #666; }
+    .empty-icon { font-size: 32px; margin-bottom: 10px; }
+    .group {
+      background: #252525;
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 10px;
+    }
+    .timestamp { font-size: 10px; color: #888; margin-bottom: 8px; }
+    .query {
+      background: #2d4a3e;
+      border-left: 3px solid #4ade80;
+      padding: 8px 10px;
+      margin: 6px 0;
+      border-radius: 0 6px 6px 0;
+      font-family: 'SF Mono', Monaco, monospace;
+      font-size: 12px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .query:hover { background: #3d5a4e; }
+    .query.copied { background: #4ade80; color: #1a1a1a; }
+    .footer {
+      padding: 12px;
+      border-top: 1px solid #444;
+      display: flex;
+      gap: 8px;
+    }
+    .btn {
+      flex: 1;
+      padding: 8px 12px;
+      border: none;
+      border-radius: 6px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn-primary { background: #4ade80; color: #1a1a1a; }
+    .btn-primary:hover { background: #5eeb94; }
+    .btn-secondary { background: #444; color: #e0e0e0; }
+    .btn-secondary:hover { background: #555; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>🔍 Search Query Revealer</h1>
+    <p>Captures the exact queries ChatGPT sends to search</p>
+  </div>
+  <div class="content" id="content">
+    <div class="empty">
+      <div class="empty-icon">🔎</div>
+      <div>No queries captured yet</div>
+      <div style="margin-top: 8px; font-size: 11px;">
+        Ask ChatGPT something that triggers a web search
+      </div>
+    </div>
+  </div>
+  <div class="footer">
+    <button class="btn btn-secondary" id="clearBtn">Clear History</button>
+    <button class="btn btn-primary" id="exportBtn">Export CSV</button>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>
