@@ -1,5 +1,3 @@
-Originally Built by Zack Notes at https://sandboxweb.io with help from Claude Code
-
 # ChatGPT Search Query Revealer
 
 A private Chrome extension that reveals the exact search queries ChatGPT sends when it searches the web.
