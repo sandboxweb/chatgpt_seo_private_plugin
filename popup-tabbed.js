@@ -1,4 +1,21 @@
 document.addEventListener('DOMContentLoaded', async () => {
+  // Tab functionality
+  const tabs = document.querySelectorAll('.tab');
+  const tabContents = document.querySelectorAll('.tab-content');
+  
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      const targetTab = tab.dataset.tab;
+      
+      // Update active states
+      tabs.forEach(t => t.classList.remove('active'));
+      tabContents.forEach(tc => tc.classList.remove('active'));
+      
+      tab.classList.add('active');
+      document.getElementById(`${targetTab}-tab`).classList.add('active');
+    });
+  });
+  
   // Check Gemini API key status
   const geminiDot = document.getElementById('gemini-dot');
   const geminiText = document.getElementById('gemini-text');

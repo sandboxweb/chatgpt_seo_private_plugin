@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Search Query Revealer - Debug Guide</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background: #1a1a1a;
+            color: #e0e0e0;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        h1 {
+            color: #4ade80;
+            font-size: 28px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #444;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #60a5fa;
+            font-size: 20px;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+        h3 {
+            color: #fbbf24;
+            font-size: 16px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        .message-box {
+            background: #2a2a2a;
+            border-left: 3px solid #4ade80;
+            padding: 12px 16px;
+            margin: 10px 0;
+            border-radius: 0 8px 8px 0;
+            font-family: monospace;
+            font-size: 13px;
+        }
+        .error-box {
+            border-left-color: #ef4444;
+            background: #3d1e1e;
+        }
+        .warning-box {
+            border-left-color: #fbbf24;
+            background: #3d2e1e;
+        }
+        .info-box {
+            border-left-color: #60a5fa;
+            background: #1e3a5f;
+        }
+        code {
+            background: #444;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 13px;
+            color: #4ade80;
+        }
+        ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        li {
+            margin: 5px 0;
+        }
+        a {
+            color: #4ade80;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .section {
+            background: #252525;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 1px solid #444;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 AI Search Query Revealer - Debug Guide</h1>
+
+    <div class="section">
+        <h2>Understanding Debug Messages</h2>
+        <p>The debug tab shows a chronological log of all extension activities. Here's what each message means:</p>
+
+        <h3>Startup Messages</h3>
+        <div class="message-box">Google content script loaded | Data: "https://www.google.com/search?..."</div>
+        <p>✅ The extension has successfully loaded on the Google page.</p>
+
+        <div class="message-box">Gemini API key loaded</div>
+        <p>✅ Your API key was found and loaded from storage.</p>
+
+        <div class="message-box">No Gemini API key found</div>
+        <p>⚠️ No API key is configured. Click the ⚙️ button to add one.</p>
+
+        <h3>Search Detection Messages</h3>
+        <div class="message-box">New search detected | Data: "your search query"</div>
+        <p>✅ A new Google search was submitted and detected.</p>
+
+        <div class="message-box">AI overview detected with selector | Data: "[aria-label*=\"AI Overview\"]"</div>
+        <p>✅ An AI overview was found on the page using the specified CSS selector.</p>
+
+        <div class="message-box">AI overview detected by text content</div>
+        <p>✅ An AI overview was found by searching for "AI Overview" text in page headings.</p>
+
+        <div class="message-box">No AI overview detected on this search</div>
+        <p>ℹ️ The search results don't include an AI overview. This is normal for many searches.</p>
+
+        <h3>API Call Messages</h3>
+        <div class="message-box">Mode | Data: "AI Overview"</div>
+        <p>ℹ️ Indicates whether AI Overview or AI Mode (udm=50) was detected.</p>
+
+        <div class="message-box">Calling Gemini API | Data: {"model":"gemini-2.5-flash","query":"..."}</div>
+        <p>✅ The extension is calling Gemini API with the specified model and query.</p>
+
+        <div class="message-box">Raw API response structure | Data: {...}</div>
+        <p>ℹ️ Shows the first 500 characters of the Gemini API response for debugging.</p>
+
+        <div class="message-box">Found queries in groundingMetadata.webSearchQueries | Data: ["query1", "query2"]</div>
+        <p>✅ Successfully extracted search queries from the API response.</p>
+
+        <div class="message-box">Checking candidate 0 | Data: {...}</div>
+        <p>ℹ️ Shows the API is examining response candidates for search queries and grounding information.</p>
+
+        <div class="message-box">Checking part 0 | Data: {"text":"..."}</div>
+        <p>ℹ️ Shows the API is examining individual parts of the response content.</p>
+
+        <div class="message-box">Total unique queries extracted | Data: 2</div>
+        <p>ℹ️ Shows how many unique search queries were found in the response.</p>
+
+        <div class="message-box">Gemini API response received | Data: {"queriesFound":2}</div>
+        <p>✅ Final summary showing the total number of queries extracted from the response.</p>
+
+        <h3>Error Messages</h3>
+        <div class="error-box">Gemini API error | Data: "error message"</div>
+        <p>❌ The API call failed. Common causes:</p>
+        <ul>
+            <li><strong>Invalid API key</strong> - Check your key in settings</li>
+            <li><strong>Model not found</strong> - The specified model doesn't exist</li>
+            <li><strong>Rate limit exceeded</strong> - Too many API calls</li>
+            <li><strong>Network error</strong> - Check your internet connection</li>
+        </ul>
+
+        <div class="warning-box">Error: Gemini API key not configured</div>
+        <p>⚠️ You need to add your Gemini API key in the extension settings.</p>
+    </div>
+
+    <div class="section">
+        <h2>Common Issues & Solutions</h2>
+
+        <h3>1. "Model not found" Error</h3>
+        <p>This means the Gemini model specified isn't available. The extension uses:</p>
+        <ul>
+            <li><code>gemini-2.5-flash</code> for regular AI Overviews</li>
+            <li><code>gemini-2.5-pro</code> for AI Mode (udm=50)</li>
+        </ul>
+        <p>If you see this error, the models might not be available in your region or with your API key tier.</p>
+
+        <h3>2. No Queries Returned</h3>
+        <p>If the API returns 0 queries, it could mean:</p>
+        <ul>
+            <li>The search grounding feature doesn't generate multiple queries for this search</li>
+            <li>The query is too simple or specific to expand</li>
+            <li>This is normal - many searches only use a single query</li>
+        </ul>
+
+        <h3>3. Extension Not Loading</h3>
+        <p>If you don't see the panel on Google:</p>
+        <ul>
+            <li>Check that the extension is enabled in chrome://extensions</li>
+            <li>Try reloading the extension</li>
+            <li>Make sure you're on google.com (not other Google domains)</li>
+            <li>Check for errors in chrome://extensions</li>
+        </ul>
+
+        <h3>4. API Key Issues</h3>
+        <p>To get a Gemini API key:</p>
+        <ol>
+            <li>Visit <a href="https://aistudio.google.com/app/apikey" target="_blank">Google AI Studio</a></li>
+            <li>Click "Create API Key"</li>
+            <li>Copy the key and paste it in the extension settings</li>
+            <li>Click "Test Connection" to verify it works</li>
+        </ol>
+    </div>
+
+    <div class="section">
+        <h2>Understanding the Response Structure</h2>
+        <p>The Gemini API response contains several key fields:</p>
+        
+        <h3>groundingMetadata.webSearchQueries</h3>
+        <p>This array contains the actual search queries Gemini would use. Example:</p>
+        <div class="message-box">["best laptops under $500 2025", "laptops under $500 reviews"]</div>
+
+        <h3>searchEntryPoint</h3>
+        <p>Contains rendered HTML content with search suggestions that Google might show. This includes:</p>
+        <ul>
+            <li>Related search chips/buttons that users can click</li>
+            <li>Links to refine or expand the search</li>
+            <li>Styled HTML content that matches Google's UI</li>
+        </ul>
+        <div class="info-box">This appears in responses as "searchEntryPoint.renderedContent" with HTML markup</div>
+
+        <h3>groundingChunks</h3>
+        <p>An array of web sources that were consulted for the response. Each chunk includes:</p>
+        <ul>
+            <li><code>web.uri</code> - The URL of the source (often a redirect URL)</li>
+            <li><code>web.title</code> - The domain or source name (e.g., "tomsguide.com", "pcworld.com")</li>
+        </ul>
+        <div class="message-box">Example: {"web":{"uri":"https://vertexaisearch...", "title":"pcmag.com"}}</div>
+
+        <h3>groundingSupports</h3>
+        <p>Maps specific parts of the AI response to their source chunks. Each support includes:</p>
+        <ul>
+            <li><code>segment</code> - The text segment with start/end indices</li>
+            <li><code>groundingChunkIndices</code> - Which groundingChunks support this segment</li>
+        </ul>
+        <p>This shows exactly which sources back up each claim in the response.</p>
+
+        <h3>Response Text</h3>
+        <p>The main response is in <code>candidates[0].content.parts[0].text</code> and contains the AI-generated answer. The response might be truncated if <code>finishReason</code> is "MAX_TOKENS".</p>
+    </div>
+
+    <div class="section">
+        <h2>Tips for Better Results</h2>
+        <ul>
+            <li>Complex queries are more likely to generate multiple search queries</li>
+            <li>AI Mode (add <code>&udm=50</code> to URL) uses a different model that might give different results</li>
+            <li>The temperature setting (1.0) provides more varied results</li>
+            <li>Some queries naturally only need a single search</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>Need More Help?</h2>
+        <p>If you're still having issues:</p>
+        <ol>
+            <li>Click "Download Logs" in the debug tab</li>
+            <li>Check for specific error messages</li>
+            <li>Make sure your API key has the necessary permissions</li>
+            <li>Try a different search query to see if the issue is query-specific</li>
+        </ol>
+    </div>
+</body>
+</html>

@@ -1,23 +1,43 @@
 {
   "manifest_version": 3,
-  "name": "ChatGPT Search Query Revealer",
-  "version": "1.0",
-  "description": "Reveals the exact search queries ChatGPT sends",
-  "permissions": ["storage"],
-  "host_permissions": ["https://chat.openai.com/*", "https://chatgpt.com/*"],
+  "name": "AI Search Query Revealer",
+  "version": "2.0",
+  "description": "Reveals search queries from ChatGPT and Google AI overviews",
+  "permissions": ["storage", "activeTab", "scripting", "tabs", "tabGroups"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "host_permissions": [
+    "https://chat.openai.com/*", 
+    "https://chatgpt.com/*",
+    "https://www.google.com/*",
+    "https://google.com/*",
+    "https://generativelanguage.googleapis.com/*"
+  ],
   "content_scripts": [
     {
       "matches": ["https://chat.openai.com/*", "https://chatgpt.com/*"],
       "js": ["content.js"],
       "run_at": "document_start"
+    },
+    {
+      "matches": ["https://www.google.com/*", "https://google.com/*"],
+      "js": ["google-content.js"],
+      "run_at": "document_end",
+      "all_frames": false
     }
   ],
   "web_accessible_resources": [
     {
       "resources": ["inject.js"],
       "matches": ["https://chat.openai.com/*", "https://chatgpt.com/*"]
+    },
+    {
+      "resources": ["google-inject.js", "debug-guide.html"],
+      "matches": ["https://www.google.com/*", "https://google.com/*"]
     }
   ],
+  "options_page": "options.html",
   "action": {
     "default_popup": "popup.html",
     "default_icon": {

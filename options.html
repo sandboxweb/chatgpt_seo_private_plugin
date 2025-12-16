@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Search Query Revealer - Settings</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background: #1a1a1a;
+            color: #e0e0e0;
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        h1 {
+            color: #4ade80;
+            font-size: 24px;
+            margin-bottom: 30px;
+        }
+        .section {
+            background: #2a2a2a;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+            border: 1px solid #444;
+        }
+        .section h2 {
+            font-size: 18px;
+            margin-bottom: 16px;
+            color: #fff;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #ccc;
+        }
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 10px 14px;
+            background: #1a1a1a;
+            border: 1px solid #444;
+            border-radius: 8px;
+            color: #e0e0e0;
+            font-size: 14px;
+            font-family: monospace;
+        }
+        input[type="text"]:focus, input[type="password"]:focus {
+            outline: none;
+            border-color: #4ade80;
+            box-shadow: 0 0 0 2px rgba(74, 222, 128, 0.2);
+        }
+        .help-text {
+            font-size: 13px;
+            color: #888;
+            margin-top: 6px;
+        }
+        .help-text a {
+            color: #4ade80;
+            text-decoration: none;
+        }
+        .help-text a:hover {
+            text-decoration: underline;
+        }
+        button {
+            padding: 10px 20px;
+            background: #4ade80;
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        button:hover {
+            background: #5eeb94;
+        }
+        button:disabled {
+            background: #666;
+            color: #ccc;
+            cursor: not-allowed;
+        }
+        .secondary {
+            background: #444;
+            color: #e0e0e0;
+        }
+        .secondary:hover {
+            background: #555;
+        }
+        .status {
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            margin-top: 10px;
+            display: none;
+        }
+        .status.success {
+            background: #1e3d2d;
+            color: #4ade80;
+            border: 1px solid #4ade80;
+        }
+        .status.error {
+            background: #3d1e1e;
+            color: #ef4444;
+            border: 1px solid #ef4444;
+        }
+        .api-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 12px;
+            font-size: 13px;
+        }
+        .api-status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #666;
+        }
+        .api-status-dot.valid {
+            background: #4ade80;
+        }
+        .api-status-dot.invalid {
+            background: #ef4444;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 AI Search Query Revealer Settings</h1>
+
+    <div class="section">
+        <h2>Gemini API Configuration</h2>
+        <form id="apiForm">
+            <div class="form-group">
+                <label for="apiKey">Gemini API Key</label>
+                <input type="password" id="apiKey" placeholder="AIza...">
+                <div class="help-text">
+                    Get your API key from <a href="https://aistudio.google.com/app/apikey" target="_blank">Google AI Studio</a>
+                </div>
+            </div>
+            <div class="api-status" id="apiStatus" style="display: none;">
+                <span class="api-status-dot"></span>
+                <span class="api-status-text"></span>
+            </div>
+            <button type="submit">Save API Key</button>
+            <button type="button" class="secondary" id="testBtn">Test Connection</button>
+        </form>
+        <div class="status" id="saveStatus"></div>
+    </div>
+
+    <div class="section">
+        <h2>About</h2>
+        <p style="color: #ccc; font-size: 14px;">
+            This extension reveals the search queries used by AI systems:
+        </p>
+        <ul style="color: #888; font-size: 13px;">
+            <li><strong>ChatGPT:</strong> Intercepts and displays actual search queries</li>
+            <li><strong>Google AI Overview:</strong> Uses Gemini 2.0 Flash for grounding queries</li>
+            <li><strong>Google AI Mode (udm=50):</strong> Uses Gemini 2.0 Pro for better accuracy</li>
+        </ul>
+        <p style="color: #888; font-size: 12px; margin-top: 16px;">
+            The extension automatically selects the appropriate model based on the Google search mode for optimal query matching.
+        </p>
+        <p style="color: #666; font-size: 12px; margin-top: 20px;">
+            Version 2.0 | <a href="https://github.com/yourusername/ai-query-revealer" target="_blank" style="color: #4ade80;">GitHub</a>
+        </p>
+    </div>
+
+    <script src="options.js"></script>
+</body>
+</html>

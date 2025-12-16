@@ -5,8 +5,7 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      width: 350px;
-      max-height: 500px;
+      width: 380px;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       font-size: 13px;
       background: #1a1a1a;
@@ -17,70 +16,180 @@
       background: #2a2a2a;
       border-bottom: 1px solid #444;
     }
-    .header h1 { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
-    .header p { font-size: 11px; color: #888; }
-    .content { padding: 12px; max-height: 400px; overflow-y: auto; }
-    .empty { text-align: center; padding: 30px 20px; color: #666; }
-    .empty-icon { font-size: 32px; margin-bottom: 10px; }
-    .group {
+    .header h1 { font-size: 16px; font-weight: 600; margin-bottom: 4px; color: #4ade80; }
+    .header p { font-size: 12px; color: #888; }
+    
+    .status-section {
       background: #252525;
-      border-radius: 8px;
-      padding: 12px;
-      margin-bottom: 10px;
+      padding: 12px 16px;
+      border-bottom: 1px solid #444;
     }
-    .timestamp { font-size: 10px; color: #888; margin-bottom: 8px; }
-    .query {
-      background: #2d4a3e;
+    .status-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 6px 0;
+      font-size: 12px;
+    }
+    .status-label { color: #888; }
+    .status-value {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 500;
+    }
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #666;
+    }
+    .status-dot.active { background: #4ade80; }
+    .status-dot.error { background: #ef4444; }
+    .status-dot.warning { background: #fbbf24; }
+    
+    .actions {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .site-link {
+      display: block;
+      padding: 12px 16px;
+      background: #2a2a2a;
+      border: 1px solid #444;
+      border-radius: 8px;
+      text-decoration: none;
+      color: #e0e0e0;
+      transition: all 0.2s;
+    }
+    .site-link:hover {
+      background: #333;
+      border-color: #4ade80;
+    }
+    .site-name {
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+    .site-desc {
+      font-size: 11px;
+      color: #888;
+    }
+    
+    .settings-link {
+      text-align: center;
+      padding: 12px;
+      border-top: 1px solid #444;
+    }
+    .settings-link a {
+      color: #4ade80;
+      text-decoration: none;
+      font-size: 12px;
+    }
+    .settings-link a:hover { text-decoration: underline; }
+    
+    .history-section {
+      padding: 0 16px 16px;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+    .history-title {
+      font-size: 12px;
+      color: #888;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .clear-link {
+      color: #4ade80;
+      text-decoration: none;
+      font-size: 11px;
+      cursor: pointer;
+    }
+    .clear-link:hover { text-decoration: underline; }
+    .query-item {
+      background: #2a2a2a;
       border-left: 3px solid #4ade80;
       padding: 8px 10px;
       margin: 6px 0;
       border-radius: 0 6px 6px 0;
-      font-family: 'SF Mono', Monaco, monospace;
-      font-size: 12px;
+      font-family: monospace;
+      font-size: 11px;
+      color: #ccc;
+      word-break: break-all;
       cursor: pointer;
-      transition: background 0.2s;
     }
-    .query:hover { background: #3d5a4e; }
-    .query.copied { background: #4ade80; color: #1a1a1a; }
-    .footer {
-      padding: 12px;
-      border-top: 1px solid #444;
-      display: flex;
-      gap: 8px;
+    .query-item:hover { background: #333; }
+    .query-item.copied {
+      background: #4ade80;
+      color: #000;
     }
-    .btn {
-      flex: 1;
-      padding: 8px 12px;
-      border: none;
-      border-radius: 6px;
-      font-size: 12px;
-      cursor: pointer;
-      transition: background 0.2s;
+    .empty-history {
+      text-align: center;
+      color: #666;
+      font-size: 11px;
+      padding: 20px 0;
     }
-    .btn-primary { background: #4ade80; color: #1a1a1a; }
-    .btn-primary:hover { background: #5eeb94; }
-    .btn-secondary { background: #444; color: #e0e0e0; }
-    .btn-secondary:hover { background: #555; }
   </style>
 </head>
 <body>
   <div class="header">
-    <h1>🔍 Search Query Revealer</h1>
-    <p>Captures the exact queries ChatGPT sends to search</p>
+    <h1>🔍 AI Search Query Revealer</h1>
+    <p>Reveals search queries from AI systems</p>
   </div>
-  <div class="content" id="content">
-    <div class="empty">
-      <div class="empty-icon">🔎</div>
-      <div>No queries captured yet</div>
-      <div style="margin-top: 8px; font-size: 11px;">
-        Ask ChatGPT something that triggers a web search
-      </div>
+  
+  <div class="status-section">
+    <div class="status-item">
+      <span class="status-label">Extension Status</span>
+      <span class="status-value">
+        <span class="status-dot active"></span>
+        Active
+      </span>
+    </div>
+    <div class="status-item">
+      <span class="status-label">ChatGPT Support</span>
+      <span class="status-value">
+        <span class="status-dot active"></span>
+        Ready
+      </span>
+    </div>
+    <div class="status-item">
+      <span class="status-label">Google AI Support</span>
+      <span class="status-value" id="gemini-status">
+        <span class="status-dot" id="gemini-dot"></span>
+        <span id="gemini-text">Checking...</span>
+      </span>
     </div>
   </div>
-  <div class="footer">
-    <button class="btn btn-secondary" id="clearBtn">Clear History</button>
-    <button class="btn btn-primary" id="exportBtn">Export CSV</button>
+  
+  <div class="actions">
+    <a href="https://chat.openai.com" target="_blank" class="site-link">
+      <div class="site-name">ChatGPT</div>
+      <div class="site-desc">View search queries in real-time</div>
+    </a>
+    <a href="https://www.google.com" target="_blank" class="site-link">
+      <div class="site-name">Google Search</div>
+      <div class="site-desc">See AI overview grounding queries</div>
+    </a>
   </div>
+  
+  <div class="history-section" id="history-section">
+    <div class="history-title">
+      Recent Queries
+      <span class="clear-link" id="clearBtn">Clear</span>
+    </div>
+    <div id="history-content">
+      <div class="empty-history">No queries captured yet</div>
+    </div>
+  </div>
+  
+  <div class="settings-link">
+    <a href="#" id="settingsBtn">⚙️ Configure API Keys</a>
+  </div>
+  
   <script src="popup.js"></script>
 </body>
 </html>

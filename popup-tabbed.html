@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      width: 380px;
+      height: 500px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-size: 13px;
+      background: #1a1a1a;
+      color: #e0e0e0;
+      overflow: hidden;
+    }
+    .header {
+      padding: 16px;
+      background: #2a2a2a;
+      border-bottom: 1px solid #444;
+    }
+    .header h1 { font-size: 16px; font-weight: 600; margin-bottom: 4px; color: #4ade80; }
+    .header p { font-size: 12px; color: #888; }
+    
+    .tabs-container {
+      display: flex;
+      background: #252525;
+      border-bottom: 1px solid #444;
+    }
+    .tab {
+      flex: 1;
+      padding: 12px;
+      text-align: center;
+      cursor: pointer;
+      font-size: 13px;
+      color: #888;
+      transition: all 0.2s;
+      border-bottom: 2px solid transparent;
+    }
+    .tab:hover {
+      color: #ccc;
+      background: #2a2a2a;
+    }
+    .tab.active {
+      color: #4ade80;
+      border-bottom-color: #4ade80;
+      background: #1a1a1a;
+    }
+    
+    .content-container {
+      height: calc(100% - 140px);
+      overflow: hidden;
+      position: relative;
+    }
+    
+    .tab-content {
+      height: 100%;
+      overflow-y: auto;
+      display: none;
+      padding: 16px;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    
+    .status-section {
+      background: #252525;
+      padding: 12px 16px;
+      border-radius: 8px;
+      margin-bottom: 16px;
+    }
+    .status-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 8px 0;
+      font-size: 12px;
+    }
+    .status-label { color: #888; }
+    .status-value {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 500;
+    }
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #666;
+    }
+    .status-dot.active { background: #4ade80; }
+    .status-dot.error { background: #ef4444; }
+    .status-dot.warning { background: #fbbf24; }
+    
+    .site-link {
+      display: block;
+      padding: 12px 16px;
+      background: #2a2a2a;
+      border: 1px solid #444;
+      border-radius: 8px;
+      text-decoration: none;
+      color: #e0e0e0;
+      transition: all 0.2s;
+      margin-bottom: 12px;
+    }
+    .site-link:hover {
+      background: #333;
+      border-color: #4ade80;
+    }
+    .site-name {
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+    .site-desc {
+      font-size: 11px;
+      color: #888;
+    }
+    
+    .history-title {
+      font-size: 12px;
+      color: #888;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .clear-link {
+      color: #4ade80;
+      text-decoration: none;
+      font-size: 11px;
+      cursor: pointer;
+    }
+    .clear-link:hover { text-decoration: underline; }
+    .query-item {
+      background: #2a2a2a;
+      border-left: 3px solid #4ade80;
+      padding: 8px 10px;
+      margin: 6px 0;
+      border-radius: 0 6px 6px 0;
+      font-family: monospace;
+      font-size: 11px;
+      color: #ccc;
+      word-break: break-all;
+      cursor: pointer;
+    }
+    .query-item:hover { background: #333; }
+    .query-item.copied {
+      background: #4ade80;
+      color: #000;
+    }
+    .empty-history {
+      text-align: center;
+      color: #666;
+      font-size: 11px;
+      padding: 40px 20px;
+    }
+    
+    .settings-content {
+      padding: 20px 0;
+    }
+    .settings-item {
+      margin-bottom: 16px;
+    }
+    .settings-label {
+      font-size: 12px;
+      color: #888;
+      margin-bottom: 8px;
+    }
+    .btn {
+      display: inline-block;
+      padding: 10px 16px;
+      background: #4ade80;
+      color: #000;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 500;
+      transition: all 0.2s;
+      cursor: pointer;
+      border: none;
+    }
+    .btn:hover {
+      background: #22c55e;
+    }
+    
+    .footer {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 12px;
+      background: #2a2a2a;
+      border-top: 1px solid #444;
+      text-align: center;
+    }
+    .footer a {
+      color: #4ade80;
+      text-decoration: none;
+      font-size: 12px;
+    }
+    .footer a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>🔍 AI Search Query Revealer</h1>
+    <p>Reveals search queries from AI systems</p>
+  </div>
+  
+  <div class="tabs-container">
+    <div class="tab active" data-tab="status">Status</div>
+    <div class="tab" data-tab="history">History</div>
+    <div class="tab" data-tab="settings">Settings</div>
+  </div>
+  
+  <div class="content-container">
+    <div class="tab-content active" id="status-tab">
+      <div class="status-section">
+        <div class="status-item">
+          <span class="status-label">Extension Status</span>
+          <span class="status-value">
+            <span class="status-dot active"></span>
+            Active
+          </span>
+        </div>
+        <div class="status-item">
+          <span class="status-label">ChatGPT Support</span>
+          <span class="status-value">
+            <span class="status-dot active"></span>
+            Ready
+          </span>
+        </div>
+        <div class="status-item">
+          <span class="status-label">Google AI Support</span>
+          <span class="status-value" id="gemini-status">
+            <span class="status-dot" id="gemini-dot"></span>
+            <span id="gemini-text">Checking...</span>
+          </span>
+        </div>
+      </div>
+      
+      <a href="https://chat.openai.com" target="_blank" class="site-link">
+        <div class="site-name">ChatGPT</div>
+        <div class="site-desc">View search queries in real-time</div>
+      </a>
+      <a href="https://www.google.com" target="_blank" class="site-link">
+        <div class="site-name">Google Search</div>
+        <div class="site-desc">See AI overview grounding queries</div>
+      </a>
+    </div>
+    
+    <div class="tab-content" id="history-tab">
+      <div class="history-title">
+        Recent Queries
+        <span class="clear-link" id="clearBtn">Clear</span>
+      </div>
+      <div id="history-content">
+        <div class="empty-history">No queries captured yet</div>
+      </div>
+    </div>
+    
+    <div class="tab-content" id="settings-tab">
+      <div class="settings-content">
+        <div class="settings-item">
+          <div class="settings-label">API Configuration</div>
+          <button class="btn" id="settingsBtn">Configure API Keys</button>
+        </div>
+        <div class="settings-item">
+          <div class="settings-label">About</div>
+          <p style="font-size: 12px; color: #888; line-height: 1.6;">
+            This extension reveals search queries made by AI systems to help you understand
+            how they gather information. Configure your Gemini API key to enable Google AI
+            overview support.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script src="popup-tabbed.js"></script>
+</body>
+</html>
